@@ -63,18 +63,22 @@ Same fridge + same `today` → same order, always.
 
 ## Routes
 
+All JSON APIs live under `/api`.
+
 | Method | Path | Body / query | Owner notes |
 | --- | --- | --- | --- |
-| POST | `/items` | `{ "name", "expires_on" }` | reject bad dates / long names |
-| GET | `/items` | `?today=YYYY-MM-DD` | sorted urgent first |
-| DELETE or POST | `/items/<id>/throw` | `{ "today" }` optional | increments wasted |
-| GET | `/recipes` | | built-in + custom |
-| POST | `/recipes` | `{ "name", "ingredients": [] }` | custom → DB |
-| GET | `/rank` | `?today=YYYY-MM-DD` | DSA scorer |
-| POST | `/cook` | `{ "recipe_name", "today" }` | remove uses; saved += n; shopping += missing |
-| GET | `/shopping-list` | | unique ingredient names |
-| GET | `/stats` | | saved / wasted / $ |
-| POST | `/sample-fridge` | `{ "today" }` | load ~8 demo items |
+| POST | `/api/items` | `{ "name", "expires_on" }` | reject bad dates / long names |
+| GET | `/api/items` | `?today=YYYY-MM-DD` | sorted urgent first |
+| POST | `/api/items/<id>/throw` | `{ "today" }` optional | increments wasted |
+| GET | `/api/recipes` | | built-in + custom |
+| POST | `/api/recipes` | `{ "name", "ingredients": [] }` | custom → DB |
+| GET | `/api/rank` | `?today=YYYY-MM-DD` | DSA scorer |
+| GET | `/api/this-week` | `?today=YYYY-MM-DD` | greedy multi-recipe plan |
+| POST | `/api/cook` | `{ "recipe_name", "today" }` | remove uses; saved += n; shopping += missing |
+| GET | `/api/shopping-list` | | unique ingredient names |
+| GET | `/api/stats` | | saved / wasted / $ |
+| POST | `/api/sample-fridge` | `{ "today" }` | load ~8 demo items |
+| GET | `/api/ingredients` | | dropdown list |
 
 ## Ingredient name rules
 

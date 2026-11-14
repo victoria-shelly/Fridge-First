@@ -230,11 +230,14 @@ Print the worked-example table and keep it on the table for judges.
 
 ---
 
-## 11. Suggested repo layout
+## 11. Repo layout (scaffolded)
+
+The runnable scaffold is already in the repo. Keep owning your files:
 
 ```text
 Fridge-First/
-  HACKUTA_BUILD_GUIDE.md   ← this file
+  HACKUTA_BUILD_GUIDE.md
+  CONTRACTS.md
   README.md
   requirements.txt
   app.py                   ← Python role
@@ -244,13 +247,15 @@ Fridge-First/
   security.py              ← Frontend/security
   stats.py                 ← Python
   shopping.py              ← Python
-  recipes.json             ← Data-model
+  recipes.json             ← Data-model (20 starter recipes; grow toward 30–40)
   ingredients.json         ← Data-model
-  templates/               ← Frontend
-  static/css/              ← Frontend (from Figma tokens)
-  static/js/               ← Frontend
-  tests/                   ← each role’s small tests
+  templates/index.html     ← Frontend
+  static/css/style.css     ← Frontend (restyle from Figma)
+  static/js/app.js         ← Frontend
+  tests/test_ranking.py    ← DSA + security smoke tests
 ```
+
+Demo path already works: sample fridge → rank → cook → shopping/stats.
 
 ---
 

@@ -10,6 +10,30 @@ Read the full team plan: **[HACKUTA_BUILD_GUIDE.md](./HACKUTA_BUILD_GUIDE.md)**
 
 Shared API / ranking contracts: **[CONTRACTS.md](./CONTRACTS.md)**
 
+## Run locally
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+flask --app app run
+```
+
+Open http://127.0.0.1:5000 · **Today is** defaults to `2026-11-14` · click **Load sample fridge** · Chicken stir-fry should rank first (score 16).
+
+```bash
+PYTHONPATH=. python tests/test_ranking.py
+```
+
+### Who edits what
+
+| File | Role |
+| --- | --- |
+| `app.py`, `stats.py`, `shopping.py` | Python |
+| `templates/`, `static/`, `security.py` | Frontend + security |
+| `ranking.py`, `tests/test_ranking.py` | DSA |
+| `models.py`, `db.py`, `recipes.json`, `ingredients.json` | Data-model |
+
 ## Stack
 
 - Flask (Python) + SQLite  
