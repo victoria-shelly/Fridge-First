@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Chicken stir-fry",
+    "ingredients": ["chicken", "bell pepper", "rice", "soy sauce"]
+  },
+  {
+    "name": "Egg fried rice",
+    "ingredients": ["eggs", "rice", "bell pepper"]
+  },
+  {
+    "name": "Yogurt parfait",
+    "ingredients": ["yogurt", "granola"]
+  },
+  {
+    "name": "Cheese omelette",
+    "ingredients": ["eggs", "cheese", "butter"]
+  },
+  {
+    "name": "Garlic pasta",
+    "ingredients": ["pasta", "garlic", "butter"]
+  },
+  {
+    "name": "Chicken rice bowl",
+    "ingredients": ["chicken", "rice", "onion"]
+  },
+  {
+    "name": "Veggie scramble",
+    "ingredients": ["eggs", "spinach", "onion", "cheese"]
+  },
+  {
+    "name": "Tomato toast",
+    "ingredients": ["bread", "tomato", "cheese"]
+  },
+  {
+    "name": "Mushroom risotto",
+    "ingredients": ["rice", "mushroom", "onion", "butter"]
+  },
+  {
+    "name": "Chicken tortilla wrap",
+    "ingredients": ["chicken", "tortilla", "lettuce", "cheese"]
+  },
+  {
+    "name": "Lemon chicken",
+    "ingredients": ["chicken", "lemon", "garlic"]
+  },
+  {
+    "name": "Spinach omelette",
+    "ingredients": ["eggs", "spinach", "cheese"]
+  },
+  {
+    "name": "Potato hash",
+    "ingredients": ["potato", "onion", "eggs", "butter"]
+  },
+  {
+    "name": "Carrot rice",
+    "ingredients": ["rice", "carrot", "onion"]
+  },
+  {
+    "name": "Honey yogurt bowl",
+    "ingredients": ["yogurt", "honey", "granola"]
+  },
+  {
+    "name": "Garlic bread",
+    "ingredients": ["bread", "garlic", "butter"]
+  },
+  {
+    "name": "Simple fried egg",
+    "ingredients": ["eggs", "butter"]
+  },
+  {
+    "name": "Onion soup base",
+    "ingredients": ["onion", "butter", "garlic"]
+  },
+  {
+    "name": "Cilantro rice",
+    "ingredients": ["rice", "cilantro", "lemon"]
+  },
+  {
+    "name": "Cheese quesadilla",
+    "ingredients": ["tortilla", "cheese", "butter"]
+  }
+]

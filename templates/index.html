@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fridge-First — Provisions for the journey home</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <p class="eyebrow">HackUTA 2026 · Odyssey</p>
+      <h1>Fridge-First</h1>
+      <p class="tagline">Watch over food provisions on the journey home. Cook what expires first so nothing is wasted.</p>
+      <div class="date-bar">
+        <label for="today">Today is</label>
+        <input type="date" id="today" />
+        <button type="button" id="reload" class="ghost">Refresh</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel" id="add-panel">
+        <h2>Add provisions</h2>
+        <form id="add-form" class="stack">
+          <label>
+            Food
+            <input list="ingredient-list" id="item-name" name="name" maxlength="80" required placeholder="chicken" />
+            <datalist id="ingredient-list"></datalist>
+          </label>
+          <label>
+            Expires
+            <input type="date" id="item-expires" name="expires_on" required />
+          </label>
+          <div class="row">
+            <button type="submit">Add to fridge</button>
+            <button type="button" id="sample-btn" class="secondary">Load sample fridge</button>
+          </div>
+          <p id="add-error" class="error" hidden></p>
+        </form>
+      </section>
+
+      <section class="panel" id="fridge-panel">
+        <h2>The fridge</h2>
+        <p class="hint">Sorted by urgency. Gray items are already expired.</p>
+        <ul id="fridge-list" class="item-list"></ul>
+      </section>
+
+      <section class="panel wide" id="recipes-panel">
+        <div class="row between">
+          <h2>Cook first</h2>
+          <button type="button" id="this-week-btn" class="secondary">This week</button>
+        </div>
+        <div id="recipe-list" class="recipe-grid"></div>
+      </section>
+
+      <section class="panel" id="shopping-panel">
+        <h2>Shopping list</h2>
+        <ul id="shopping-list" class="plain-list"></ul>
+      </section>
+
+      <section class="panel" id="stats-panel">
+        <h2>Voyage log</h2>
+        <div class="stats">
+          <div><span id="saved-count">0</span><label>Saved</label></div>
+          <div><span id="wasted-count">0</span><label>Wasted</label></div>
+          <div><span id="money-saved">$0</span><label>Est. saved</label></div>
+        </div>
+      </section>
+
+      <section class="panel" id="custom-panel">
+        <h2>Add your own recipe</h2>
+        <form id="recipe-form" class="stack">
+          <label>
+            Name
+            <input id="recipe-name" maxlength="80" required placeholder="Garlic pasta" />
+          </label>
+          <label>
+            Ingredients (comma-separated)
+            <input id="recipe-ingredients" required placeholder="pasta, garlic, butter" />
+          </label>
+          <button type="submit">Save recipe</button>
+          <p id="recipe-error" class="error" hidden></p>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
