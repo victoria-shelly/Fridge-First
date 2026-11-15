@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Biscotti (Cretan Paximadi)",
+        "ingredients": [
+            "biscuits",
+            "water",
+            "wine",
+            "olive oil",
+            "brined cheese",
+            "cured olives"
+        ]
+    },
+    {
+        "name": "Energy Paste",
+        "ingredients": [
+            "barley flour",
+            "water",
+            "honey",
+            "dried figs",
+            "pine nuts"
+        ]
+    },
+    {
+        "name": "Maza (Porridge)",
+        "ingredients": [
+            "wheat",
+            "water",
+            "olive oil",
+            "wild herbs"
+        ]
+    },
+    {
+        "name": "Phake (Lentil Soup)",
+        "ingredients": [
+            "dried lentils",
+            "chickpeas",
+            "sea salt",
+            "wild herbs",
+            "salted dried fish"
+        ]
+    },
+    {
+        "name": "Kykeon",
+        "ingredients": [
+            "wine",
+            "water",
+            "barley flour",
+            "honey",
+            "brined cheese"
+        ]
+    },
+    {
+        "name": "Trail Mix",
+        "ingredients": [
+            "almonds",
+            "pistachios",
+            "dried raisins",
+            "olive oil",
+            "biscuits"
+        ]
+    }
+]
