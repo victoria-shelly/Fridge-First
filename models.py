@@ -17,7 +17,6 @@ class FoodItem:
                 return "yellow"
             else:
                 return "green" 
-                
     def to_dict(self, today):
     # Converts the object to a dictionary for JSON serialization. 
     # Quotes are used for the keys to ensure they are strings.
@@ -52,5 +51,3 @@ class Recipe:
             ingredients=data["ingredients"],
             steps=data["steps"]
         )
-    def can_make(self, pantry_items):
-        return self.ingredients.issubset(pantry_items)  # Checks available items
