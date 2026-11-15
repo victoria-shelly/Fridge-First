@@ -78,7 +78,6 @@ def test_throw_out(db_fixture):
 
 
 def test_get_available_recipes(db_fixture):
-    # Cookbook availability comes from recipes.json only.
     add_item("eggs", "2026-11-25", 3.00)
     add_item("butter", "2026-11-28", 2.00)
     available_names = {r.name for r in get_available_recipes()}
@@ -86,4 +85,9 @@ def test_get_available_recipes(db_fixture):
     assert "Chicken stir-fry" not in available_names  # missing chicken/rice/etc.
     cookbook = list_recipes()
     assert cookbook
-    assert all(str(r.id).startswith("json-") for r in cookbook)
+    assert any(str(r.id).startswith("json-") for r in cookbook)
+
+    add_recipe("Crew Hash", ["eggs", "butter"], ["Mix"])
+    names = {r.name for r in list_recipes()}
+    assert "Crew Hash" in names
+    assert "Crew Hash" in {r.name for r in get_available_recipes()}

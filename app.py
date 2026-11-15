@@ -125,8 +125,7 @@ def sample_fridge():
 @app.get("/api/recipes")
 @app.get("/recipes")
 def get_recipes():
-    # Sample / voyage cookbook is recipes.json only (not custom DB rows).
-    return jsonify([recipe.to_dict() for recipe in db.load_json_recipes()])
+    return jsonify([recipe.to_dict() for recipe in db.list_recipes()])
 
 
 @app.post("/api/recipes")
@@ -141,7 +140,7 @@ def create_recipe():
         return error(issues)
 
     try:
-        name = security.validate_name(data.get("name"), field="recipe name")
+        name = security.validate_recipe_title(data.get("name"))
         ingredients = security.validate_ingredients(data.get("ingredients"))
     except ValueError as exc:
         return error(str(exc))
@@ -159,7 +158,7 @@ def get_ranking():
         return error(str(exc))
 
     ranked = rank_recipes_for_api(
-        db.load_json_recipes(), db.list_active_items(), today=today
+        db.list_recipes(), db.list_active_items(), today=today
     )
     return jsonify({"today": today.isoformat(), "recipes": ranked})
 
@@ -175,7 +174,7 @@ def get_plan():
 
     count = request.args.get("count", default=5, type=int)
     plan = plan_week_for_api(
-        db.load_json_recipes(), db.list_active_items(), today=today, count=count
+        db.list_recipes(), db.list_active_items(), today=today, count=count
     )
     return jsonify({"today": today.isoformat(), "plan": plan})
 

@@ -208,8 +208,8 @@ def list_custom_recipes():
 
 
 def list_recipes():
-    """Displayed / ranked cookbook comes only from recipes.json."""
-    return load_json_recipes()
+    """Voyage cookbook from recipes.json, plus any crew-submitted custom recipes."""
+    return load_json_recipes() + list_custom_recipes()
 
 
 def find_recipe_by_name(name: str):
@@ -245,4 +245,4 @@ def list_shopping():
 
 def get_available_recipes():
     active_names = {item.name for item in list_active_items()}
-    return [recipe for recipe in load_json_recipes() if recipe.can_make(active_names)]
+    return [recipe for recipe in list_recipes() if recipe.can_make(active_names)]

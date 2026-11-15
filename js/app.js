@@ -175,7 +175,7 @@
       api(`/api/stats?today=${encodeURIComponent(today)}`),
     ]);
     renderFridge(fridge.items || []);
-    renderRecipes(ranked.recipes || ranked || [], "Stow provisions to see cookbook rankings from recipes.json.");
+    renderRecipes(ranked.recipes || ranked || [], "Stow provisions to see ranked recipes.");
     renderShopping(shop.items || []);
     renderStats(impact);
   }

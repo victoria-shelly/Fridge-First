@@ -77,10 +77,24 @@ def validate_item(data: dict) -> list[str]:
     return issues
 
 
+def validate_recipe_title(raw, field="recipe name"):
+    """Keep display casing for dish titles; still enforce length/charset."""
+    if raw is None:
+        raise ValueError(f"{field} is required")
+    title = " ".join(str(raw).strip().split())
+    if not title:
+        raise ValueError(f"{field} is required")
+    if len(title) > MAX_NAME_LEN:
+        raise ValueError(f"{field} must be at most {MAX_NAME_LEN} characters")
+    if not ALLOWED_NAME.match(title):
+        raise ValueError(f"{field} has invalid characters")
+    return title
+
+
 def validate_recipe(data: dict) -> list[str]:
     issues = []
     try:
-        validate_name(data.get("name"), field="recipe name")
+        validate_recipe_title(data.get("name"))
     except ValueError as exc:
         issues.append(str(exc))
     try:

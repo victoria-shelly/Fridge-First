@@ -80,8 +80,8 @@ Prefer `/api/...` paths (plain paths also work).
 
 ## Cookbook source
 
-- Ranked / displayed sample recipes come **only** from `recipes.json`
-- Custom crew notes may be saved in SQLite, but they do not enter `/api/rank` or `/api/recipes`
+- Built-in recipes come from `recipes.json`
+- Custom crew recipes are stored in SQLite and also appear in `/api/recipes`, `/api/rank`, and `/api/this-week`
 
 ## Ingredient name rules
 
