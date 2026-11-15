@@ -1,0 +1,111 @@
+:root {
+  --bg: #14201c;
+  --bg-panel: #1c2b25;
+  --bg-soft: #24362e;
+  --text: #e8efe9;
+  --muted: #9bb0a4;
+  --accent: #c4a35a;
+  --accent-text: #1a160c;
+  --line: #334840;
+  --red: #d96b5c;
+  --yellow: #d4b45a;
+  --green: #6f9e78;
+  --gray: #7d8a84;
+  --danger: #e07a6c;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", serif;
+  --font-body: "Segoe UI", "Helvetica Neue", sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--text);
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, #2a4036 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, #3a3220 0%, transparent 45%),
+    var(--bg);
+}
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+.hero {
+  margin-bottom: 1.75rem;
+}
+.eyebrow {
+  margin: 0 0 0.4rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+.hero h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+.tagline {
+  max-width: 36rem;
+  margin: 0.75rem 0 1.25rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+.date-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+.layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.panel {
+  background: color-mix(in srgb, var(--bg-panel) 92%, black);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem 1.15rem;
+}
+.panel.wide {
+  grid-column: 1 / -1;
+}
+.panel h2 {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+.hint {
+  margin: -0.25rem 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.stack {
+  display: grid;
+  gap: 0.75rem;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+.row.between {
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+input {
+  width: 100%;
+}
