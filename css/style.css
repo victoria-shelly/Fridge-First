@@ -61,15 +61,29 @@ body {
   animation: sun-pulse 8s ease-in-out infinite;
 }
 
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(180px, 0.85fr);
+  gap: 1rem 1.5rem;
+  align-items: end;
+  margin-bottom: 1.75rem;
+  animation: rise-in 0.8s ease both;
+}
+
+.hero-ship {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  min-height: 150px;
+}
+
 .ship {
-  position: absolute;
-  width: min(280px, 42vw);
-  bottom: 18vh;
-  left: 8vw;
+  width: min(260px, 100%);
   fill: #0b2230;
   stroke: rgba(217, 226, 236, 0.35);
   stroke-width: 1.5;
   animation: ship-bob 5.5s ease-in-out infinite;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
 }
 
 .sail { fill: rgba(217, 226, 236, 0.55); stroke: none; }
@@ -110,11 +124,6 @@ body {
   max-width: 1100px;
   margin: 0 auto;
   padding: 2rem 1.25rem 3.5rem;
-}
-
-.hero {
-  margin-bottom: 1.75rem;
-  animation: rise-in 0.8s ease both;
 }
 
 .eyebrow {
@@ -310,6 +319,31 @@ button.danger {
 }
 .stats label { justify-items: center; }
 
+.note-panel {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--dawn) 28%, var(--panel-edge));
+  background:
+    linear-gradient(135deg, rgba(224, 181, 106, 0.08), transparent 42%),
+    var(--panel);
+}
+
+.note-head {
+  margin-bottom: 0.85rem;
+}
+
+.note-form {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.9fr) minmax(220px, 1.4fr) auto;
+  gap: 0.85rem 1rem;
+  align-items: end;
+}
+
+.note-actions {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: start;
+}
+
 .rise { animation: rise-in 0.7s ease both; }
 .delay-1 { animation-delay: 0.08s; }
 .delay-2 { animation-delay: 0.16s; }
@@ -341,9 +375,21 @@ button.danger {
   50% { opacity: 0.95; transform: scale(1.05); }
 }
 
+@media (max-width: 900px) {
+  .note-form {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .hero-ship {
+    justify-content: center;
+    min-height: 120px;
+  }
   .layout { grid-template-columns: 1fr; }
   .panel.wide { grid-column: auto; }
-  .ship { left: 50%; transform: translateX(-50%); bottom: 12vh; }
   .sun { right: 8vw; top: 8vh; width: 54px; height: 54px; }
 }

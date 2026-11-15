@@ -13,17 +13,6 @@
   <div class="sea" aria-hidden="true">
     <div class="horizon"></div>
     <div class="sun"></div>
-    <svg class="ship" viewBox="0 0 240 140" role="presentation">
-      <g class="hull">
-        <path d="M28 98 C55 118, 185 118, 214 98 L198 84 L42 84 Z" />
-        <path class="deck" d="M48 84 L190 84 L182 74 L56 74 Z" />
-      </g>
-      <g class="mast">
-        <rect x="116" y="18" width="4" height="66" />
-        <path class="sail sail-main" d="M120 24 L168 70 L120 70 Z" />
-        <path class="sail sail-jib" d="M116 36 L78 72 L116 72 Z" />
-      </g>
-    </svg>
     <div class="wave wave-a"></div>
     <div class="wave wave-b"></div>
     <div class="wave wave-c"></div>
@@ -31,13 +20,28 @@
 
   <div class="page">
     <header class="hero">
-      <p class="eyebrow">HackUTA 2026 · The Odyssey</p>
-      <h1>Fridge-First</h1>
-      <p class="tagline">Steward of the galley on the voyage home — watch the provisions, cook what spoils first, and make port with nothing wasted.</p>
-      <div class="date-bar">
-        <label for="today">Voyage day</label>
-        <input type="date" id="today" />
-        <button type="button" id="reload" class="ghost">Reset bearings</button>
+      <div class="hero-copy">
+        <p class="eyebrow">HackUTA 2026 · The Odyssey</p>
+        <h1>Fridge-First</h1>
+        <p class="tagline">Steward of the galley on the voyage home — watch the provisions, cook what spoils first, and make port with nothing wasted.</p>
+        <div class="date-bar">
+          <label for="today">Voyage day</label>
+          <input type="date" id="today" />
+          <button type="button" id="reload" class="ghost">Reset bearings</button>
+        </div>
+      </div>
+      <div class="hero-ship" aria-hidden="true">
+        <svg class="ship" viewBox="0 0 240 140" role="presentation">
+          <g class="hull">
+            <path d="M28 98 C55 118, 185 118, 214 98 L198 84 L42 84 Z" />
+            <path class="deck" d="M48 84 L190 84 L182 74 L56 74 Z" />
+          </g>
+          <g class="mast">
+            <rect x="116" y="18" width="4" height="66" />
+            <path class="sail sail-main" d="M120 24 L168 70 L120 70 Z" />
+            <path class="sail sail-jib" d="M116 36 L78 72 L116 72 Z" />
+          </g>
+        </svg>
       </div>
     </header>
 
@@ -73,7 +77,7 @@
         <div class="row between">
           <div>
             <h2>Cook first</h2>
-            <p class="hint">Meals from the voyage cookbook (<code>recipes.json</code>), ranked by urgency.</p>
+            <p class="hint">Meals from the voyage cookbook, ranked by urgency.</p>
           </div>
           <button type="button" id="this-week-btn" class="secondary">This week’s plan</button>
         </div>
@@ -95,20 +99,27 @@
         </div>
       </section>
 
-      <section class="panel rise delay-4" id="add-recipes-panel">
-        <h2>Crew recipe note</h2>
-        <p class="hint">Custom notes are stored for the crew, but ranked meals stay from <code>recipes.json</code>.</p>
-        <form id="recipe-form" class="stack">
+      <section class="panel wide note-panel rise delay-4" id="add-recipes-panel">
+        <div class="note-head">
+          <div>
+            <p class="eyebrow">Captain’s log</p>
+            <h2>Crew recipe note</h2>
+            <p class="hint">Jot a meal idea for the crew. Ranked cookbook meals stay separate.</p>
+          </div>
+        </div>
+        <form id="recipe-form" class="note-form">
           <label>
-            Name
+            Dish name
             <input id="recipe-name" maxlength="80" required placeholder="Galley stew" />
           </label>
-          <label>
-            Ingredients (comma-separated)
+          <label class="note-ingredients">
+            Ingredients
             <input id="recipe-ingredients" required placeholder="onion, rice, olive oil" />
           </label>
-          <button type="submit">Save note</button>
-          <p id="recipe-error" class="error" hidden></p>
+          <div class="note-actions">
+            <button type="submit">Pin to the log</button>
+            <p id="recipe-error" class="error" hidden></p>
+          </div>
         </form>
       </section>
     </main>
