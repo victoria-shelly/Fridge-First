@@ -85,7 +85,7 @@ Agree on names once, then work only in your column.
 | **DSA** — ranking | Urgency, score, heap rank, “This week” | `ranking.py`, `test_ranking.py` | Worked example (chicken stir-fry = 16) passes |
 | **Data-model** | Classes, DB, recipe seed | `models.py`, `db.py`, `recipes.json`, `ingredients.json` | Colors/days_left correct; cook/throw mutate DB safely |
 
-**Shared contracts (write these on a whiteboard or in `CONTRACTS.md` first hour):**
+**Shared contracts (write these on a whiteboard or in [`docs/CONTRACTS.md`](./CONTRACTS.md) first hour):**
 
 ```text
 FoodItem: { id, name, expires_on }

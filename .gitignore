@@ -1,7 +1,26 @@
+# Virtual environments
 .venv/
 venv/
+env/
+
+# Python
 __pycache__/
 *.py[cod]
-*.db
+*$py.class
 .pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# App / local data
+*.db
+*.db-journal
+fridge.db
+
+# OS / editor
 .DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
