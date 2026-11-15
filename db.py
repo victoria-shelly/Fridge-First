@@ -1,156 +1,232 @@
+"""SQLite helpers with parameterized queries only."""
+
+from __future__ import annotations
+
 import json
 import sqlite3
-from models import FoodItem, Recipe
+from pathlib import Path
+
+from models import FoodItem, Recipe, normalize_name, parse_date
+
+ROOT = Path(__file__).resolve().parent
+DB_PATH = ROOT / "fridge.db"
+RECIPES_PATH = ROOT / "recipes.json"
+INGREDIENTS_PATH = ROOT / "ingredients.json"
+
+SAMPLE_FRIDGE = [
+    ("chicken", "2026-11-14", 6.0),
+    ("bell pepper", "2026-11-16", 1.5),
+    ("yogurt", "2026-11-19", 2.0),
+    ("eggs", "2026-11-25", 3.0),
+    ("rice", "2027-03-01", 2.5),
+    ("bread", "2026-11-13", 2.0),
+    ("onion", "2026-11-18", 1.0),
+    ("cheese", "2026-11-22", 3.5),
+]
+
+
+def connect():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
+
 
 def init_db():
-    conn = sqlite3.connect('fridge.db')
-    conn.row_factory = sqlite3.Row
+    with connect() as conn:
+        conn.executescript(
+            """
+            CREATE TABLE IF NOT EXISTS items (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                expires TEXT NOT NULL,
+                price REAL DEFAULT 0,
+                state TEXT NOT NULL DEFAULT 'active'
+            );
+            CREATE TABLE IF NOT EXISTS recipes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                ingredients TEXT NOT NULL,
+                steps TEXT NOT NULL DEFAULT '[]',
+                source TEXT NOT NULL DEFAULT 'custom'
+            );
+            CREATE TABLE IF NOT EXISTS log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                status TEXT NOT NULL,
+                date TEXT NOT NULL,
+                price REAL DEFAULT 0
+            );
+            CREATE TABLE IF NOT EXISTS shopping (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE
+            );
+            """
+        )
+    seed_builtin_recipes()
 
-#Items table
-conn.execute("""
-CREATE TABLE IF NOT EXISTS items (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    expires TEXT,
-    price REAL,
-    state TEXT
-)
-""")
 
-#Custom Recipes table
-conn.execute("""
-CREATE TABLE IF NOT EXISTS recipes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    ingredients TEXT,
-    steps TEXT
-)
-""")
+def seed_builtin_recipes():
+    if not RECIPES_PATH.exists():
+        return
+    data = json.loads(RECIPES_PATH.read_text(encoding="utf-8"))
+    with connect() as conn:
+        for row in data:
+            name = row["name"]
+            exists = conn.execute(
+                "SELECT id FROM recipes WHERE name = ? AND source = 'builtin'",
+                (name,),
+            ).fetchone()
+            if exists:
+                continue
+            conn.execute(
+                "INSERT INTO recipes (name, ingredients, steps, source) VALUES (?, ?, ?, 'builtin')",
+                (
+                    name,
+                    json.dumps([normalize_name(x) for x in row.get("ingredients", [])]),
+                    json.dumps(row.get("steps", [])),
+                ),
+            )
 
-#Log table
-conn.execute("""
-    CREATE TABLE IF NOT EXISTS log(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    status TEXT,
-    date TEXT,
-    price REAL
-    )
-""")
-conn.commit()
-conn.close()
+
+def load_ingredients():
+    if not INGREDIENTS_PATH.exists():
+        return []
+    data = json.loads(INGREDIENTS_PATH.read_text(encoding="utf-8"))
+    return sorted({normalize_name(x) for x in data})
+
 
 def add_item(name, expires, price=0, state="active"):
-    name = name.strip() # Normalize the name by stripping whitespace
-    conn = sqlite3.connect('fridge.db')
-    conn.execute(
-        "INSERT INTO items (name, expires, price, state) VALUES (?, ?, ?, ?)", 
-    (name, expires, price, state)
-    )
-    conn.commit()
-    conn.close()
+    item = FoodItem(name=name, expires=expires, price=price, state=state)
+    with connect() as conn:
+        cur = conn.execute(
+            "INSERT INTO items (name, expires, price, state) VALUES (?, ?, ?, ?)",
+            (item.name, item.expires.isoformat(), item.price, item.state),
+        )
+        item.id = int(cur.lastrowid)
+    return item
+
 
 def list_active_items():
-    conn = sqlite3.connect('fridge.db')
-    conn.row_factory = sqlite3.Row # Enable dictionary-style lookups
-    cursor = conn.execute("SELECT * FROM items WHERE state='active'")
-    items = cursor.fetchall()
-    conn.close()
-    return[
-        FoodItem(row["name"], row["expires"], row["price"]) 
-        for row in items
+    with connect() as conn:
+        rows = conn.execute(
+            "SELECT id, name, expires, price, state FROM items WHERE state = 'active' ORDER BY expires ASC, name ASC"
+        ).fetchall()
+    return [
+        FoodItem(
+            name=row["name"],
+            expires=row["expires"],
+            price=row["price"],
+            item_id=row["id"],
+            state=row["state"],
+        )
+        for row in rows
     ]
 
+
+def clear_active_items():
+    with connect() as conn:
+        conn.execute("DELETE FROM items WHERE state = 'active'")
+
+
+def load_sample_fridge():
+    clear_active_items()
+    return [add_item(name, expires, price) for name, expires, price in SAMPLE_FRIDGE]
+
+
 def mark_used(names, today):
-    conn = sqlite3.connect('fridge.db')
-    conn.row_factory = sqlite3.Row
-    for name in names:
-        # Fetch the price of the active item 
-        name = name.strip().lower() # Match FoodItem normalization
-        cursor = conn.execute(
-            "SELECT price FROM items WHERE name = ? AND state = 'active'", 
-            (name,)
-        )
-        item = cursor.fetchone()
-        if item:
-            price = item["price"]
-            # Update the item state to 'used' 
-            conn.execute(
-                "UPDATE items SET state = 'used' WHERE name = ? AND state = 'active'", 
-                (name,)
-            )
-            # Log the saved item 
+    today_text = parse_date(today).isoformat()
+    removed = []
+    with connect() as conn:
+        for raw in names:
+            name = normalize_name(raw)
+            row = conn.execute(
+                "SELECT id, name, price FROM items WHERE name = ? AND state = 'active' ORDER BY expires ASC LIMIT 1",
+                (name,),
+            ).fetchone()
+            if not row:
+                continue
+            conn.execute("UPDATE items SET state = 'used' WHERE id = ?", (row["id"],))
             conn.execute(
                 "INSERT INTO log (name, status, date, price) VALUES (?, 'saved', ?, ?)",
-                (name, today, price)
+                (row["name"], today_text, row["price"]),
             )
-    conn.commit()
-    conn.close()
+            removed.append(row["name"])
+    return removed
 
-def throw_out(item_id, today):
-    conn = sqlite3.connect('fridge.db')
-    conn.row_factory = sqlite3.Row
-    
-    # Fetch the name and price of the item to be thrown out
-    cursor = conn.execute("SELECT name, price FROM items WHERE id = ?", (item_id,))
-    item = cursor.fetchone()
-    
-    if item:
-        name = item["name"]
-        price = item["price"]
-        
-        # 2. Update state to 'wasted' 
+
+def throw_out(item_id, today=None):
+    today_text = parse_date(today or date_today()).isoformat()
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT id, name, price, state FROM items WHERE id = ?",
+            (item_id,),
+        ).fetchone()
+        if row is None or row["state"] != "active":
+            return False
         conn.execute("UPDATE items SET state = 'wasted' WHERE id = ?", (item_id,))
-        
-        # 3. Log the wasted item 
         conn.execute(
             "INSERT INTO log (name, status, date, price) VALUES (?, 'wasted', ?, ?)",
-            (name, today, price)
+            (row["name"], today_text, row["price"]),
         )
-        
-    conn.commit()
-    conn.close()
+    return True
 
 
-def add_recipe(name, ingredients, steps):
-    conn = sqlite3.connect('fridge.db')
-    conn.execute(
-        "INSERT INTO recipes (name, ingredients, steps) VALUES (?, ?, ?)",
-        (name, json.dumps(ingredients), json.dumps(steps))
-    )
-    conn.commit()
-    conn.close()
-    
+def date_today():
+    from datetime import date
+
+    return date.today()
+
+
+def add_recipe(name, ingredients, steps=None):
+    recipe = Recipe(name=name, ingredients=ingredients, steps=steps or [])
+    with connect() as conn:
+        cur = conn.execute(
+            "INSERT INTO recipes (name, ingredients, steps, source) VALUES (?, ?, ?, 'custom')",
+            (recipe.name, json.dumps(sorted(recipe.ingredients)), json.dumps(recipe.steps)),
+        )
+        recipe.id = int(cur.lastrowid)
+    return recipe
+
+
 def list_recipes():
-    conn = sqlite3.connect('fridge.db')
-    conn.row_factory = sqlite3.Row
-    cursor = conn.execute("SELECT * FROM recipes")
-    rows = cursor.fetchall()
-    conn.close()
+    with connect() as conn:
+        rows = conn.execute(
+            "SELECT id, name, ingredients, steps FROM recipes ORDER BY name ASC"
+        ).fetchall()
     recipes = []
     for row in rows:
-        recipe_dict={
-            "name": row["name"],
-            "ingredients": json.loads(row["ingredients"]),
-            "steps": json.loads(row["steps"])
-        }
-        recipes.append(Recipe.from_dict(recipe_dict)) # changed to Recipe.from_dict to create Recipe instances from the dictionary representation
+        recipes.append(
+            Recipe(
+                name=row["name"],
+                ingredients=json.loads(row["ingredients"]),
+                steps=json.loads(row["steps"] or "[]"),
+                recipe_id=row["id"],
+            )
+        )
     return recipes
 
+
 def get_log():
-    conn = sqlite3.connect('fridge.db')
-    conn.row_factory = sqlite3.Row
-    cursor = conn.execute("SELECT * FROM log")
-    rows = cursor.fetchall()
-    conn.close()
-    return rows
+    with connect() as conn:
+        rows = conn.execute("SELECT name, status, date, price FROM log").fetchall()
+    return [dict(row) for row in rows]
+
+
+def add_shopping_items(names):
+    cleaned = sorted({normalize_name(n) for n in names if str(n).strip()})
+    with connect() as conn:
+        for name in cleaned:
+            conn.execute("INSERT OR IGNORE INTO shopping (name) VALUES (?)", (name,))
+    return list_shopping()
+
+
+def list_shopping():
+    with connect() as conn:
+        rows = conn.execute("SELECT name FROM shopping ORDER BY name ASC").fetchall()
+    return [row["name"] for row in rows]
+
 
 def get_available_recipes():
-    # Fetch active fridge items and all recipes 
-    active_items = list_active_items()
-    all_recipes = list_recipes()
-    
-    # Extract item names from FoodItem objects 
-    active_names = {item.name for item in active_items}
-    # Use the Recipe model's built-in can_make method 
-    return [recipe for recipe in all_recipes if recipe.can_name(active_names) or recipe.can_make(active_names)]
+    active_names = {item.name for item in list_active_items()}
+    return [recipe for recipe in list_recipes() if recipe.can_make(active_names)]

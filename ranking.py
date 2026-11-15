@@ -202,6 +202,7 @@ def plan_this_week(
     recipes: Iterable[Any],
     fridge_items: Iterable[Any] | dict[str, dict[str, Any]],
     today: str | date | datetime | None = None,
+    count: int | None = None,
 ) -> list[dict[str, Any]]:
     """
     Greedily select a sequence of recipes for 'This week' that uses up as much
@@ -235,7 +236,49 @@ def plan_this_week(
             if _extract_recipe_fields(r)[0].lower() != best_name_lower
         ]
 
+    if count is not None:
+        weekly_plan = weekly_plan[: max(0, int(count))]
+
     for step_num, card in enumerate(weekly_plan, start=1):
         card["rank"] = step_num
 
     return weekly_plan
+
+
+# Alias used by some backend drafts.
+plan_week = plan_this_week
+
+
+def _normalize_rank_card(card: dict[str, Any]) -> dict[str, Any]:
+    """Ensure ranked cards expose uses as detail objects for the UI contract."""
+    uses = card.get("uses", [])
+    details = card.get("uses_details")
+    if details is None and uses and isinstance(uses[0], str):
+        details = [
+            {
+                "name": name,
+                "color": "green",
+                "urgency_points": 1,
+            }
+            for name in uses
+        ]
+    if details is not None:
+        card["uses"] = [
+            {
+                "name": row["name"],
+                "color": row.get("color", "green"),
+                "urgency_points": row.get("points", row.get("urgency_points", 1)),
+            }
+            for row in details
+        ]
+    return card
+
+
+def rank_recipes_for_api(recipes, fridge_items, today=None):
+    ranked = rank_recipes(recipes, fridge_items, today=today)
+    return [_normalize_rank_card(card) for card in ranked]
+
+
+def plan_week_for_api(recipes, fridge_items, today=None, count=None):
+    plan = plan_this_week(recipes, fridge_items, today=today, count=count)
+    return [_normalize_rank_card(card) for card in plan]

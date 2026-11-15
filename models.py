@@ -1,53 +1,110 @@
-from datetime import date
+"""Data-model: FoodItem and Recipe."""
+
+from __future__ import annotations
+
+from datetime import date, datetime
+
+
+def parse_date(value: str | date | datetime) -> date:
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+    return date.fromisoformat(str(value).strip()[:10])
+
+
+def normalize_name(name: str) -> str:
+    return " ".join(str(name).strip().lower().split())
+
+
 class FoodItem:
-    def __init__(self, name, expires, price=0):
-        self.name = name.strip().lower() # Normalizes the name
-        self.expires = date.fromisoformat(expires) # Convertes text to a date object
-        self.price = price
+    def __init__(self, name, expires, price=0, item_id=None, state="active"):
+        self.id = item_id
+        self.name = normalize_name(name)
+        self.expires = parse_date(expires)
+        self.price = float(price or 0)
+        self.state = state
+
     def days_left(self, today):
-    return (self.expires - today).days # Calculates the number of days left until expiration
+        return (self.expires - parse_date(today)).days
 
     def status(self, today):
-        days_left = self.days_left(today)
-        if days_left < 0:
-            return "expired"
-            elif days_left == 0:
-                return "red"
-            elif days_left >= 1 and days_left <=3:
-                return "yellow"
-            else:
-                return "green" 
+        days = self.days_left(today)
+        if days < 0:
+            return "gray"
+        if days == 0:
+            return "red"
+        if days <= 3:
+            return "yellow"
+        return "green"
+
+    def urgency_points(self, today):
+        return {"red": 10, "yellow": 5, "green": 1, "gray": 0}[self.status(today)]
+
     def to_dict(self, today):
-    # Converts the object to a dictionary for JSON serialization. 
-    # Quotes are used for the keys to ensure they are strings.
+        color = self.status(today)
         return {
-            "name": self.name, 
+            "id": self.id,
+            "name": self.name,
             "expires": self.expires.isoformat(),
+            "expires_on": self.expires.isoformat(),
             "price": self.price,
             "days_left": self.days_left(today),
-            "status": self.status(today) 
-            
+            "status": color,
+            "color": color,
+            "urgency_points": self.urgency_points(today),
+            "state": self.state,
         }
+
+    def __getitem__(self, key):
+        # Allow dict-style access used by some teammate tests.
+        mapping = {
+            "id": self.id,
+            "name": self.name,
+            "expires": self.expires.isoformat(),
+            "price": self.price,
+            "state": self.state,
+        }
+        if key not in mapping:
+            raise KeyError(key)
+        return mapping[key]
+
     def __repr__(self):
-        return f"FoodItem(name={self.name}, expires={self.expires}, price={self.price})"
-        # This method provides a string representation of the object, useful for debugging and logging.
+        return f"FoodItem(name={self.name!r}, expires={self.expires}, price={self.price})"
+
 
 class Recipe:
-    def __init__(self, name, ingredients, steps):
-       self.name = name
-       self.ingredients = {ing.strip().lower() for ing in ingredients} # Normalizes the ingredients
-       self.steps = steps #List of steps to prepare the recipe
+    def __init__(self, name, ingredients, steps=None, recipe_id=None):
+        self.id = recipe_id
+        self.name = str(name).strip()
+        self.ingredients = {normalize_name(ing) for ing in ingredients if str(ing).strip()}
+        self.steps = list(steps or [])
+
+    def can_make(self, pantry_items):
+        pantry = {normalize_name(x) for x in pantry_items}
+        return self.ingredients.issubset(pantry)
+
     def to_dict(self):
         return {
+            "id": self.id,
             "name": self.name,
-            "ingredients": sorted(self.ingredients), # Sorts the ingredients for consistent ordering
-            "steps": self.steps
+            "ingredients": sorted(self.ingredients),
+            "steps": self.steps,
         }
-    @classmethod #Allows the method to be called on the class itself, rather than on an instance of the class. 
-    #This is useful for creating instances from data without needing an existing instance.
+
+    def __getitem__(self, key):
+        data = self.to_dict()
+        if key == "ingredients":
+            return sorted(self.ingredients)
+        if key not in data:
+            raise KeyError(key)
+        return data[key]
+
+    @classmethod
     def from_dict(cls, data):
         return cls(
             name=data["name"],
-            ingredients=data["ingredients"],
-            steps=data["steps"]
+            ingredients=data.get("ingredients", []),
+            steps=data.get("steps", []),
+            recipe_id=data.get("id"),
         )

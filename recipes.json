@@ -1,62 +1,58 @@
 [
-    {
-        "name": "Biscotti (Cretan Paximadi)",
-        "ingredients": [
-            "biscuits",
-            "water",
-            "wine",
-            "olive oil",
-            "brined cheese",
-            "cured olives"
-        ]
-    },
-    {
-        "name": "Energy Paste",
-        "ingredients": [
-            "barley flour",
-            "water",
-            "honey",
-            "dried figs",
-            "pine nuts"
-        ]
-    },
-    {
-        "name": "Maza (Porridge)",
-        "ingredients": [
-            "wheat",
-            "water",
-            "olive oil",
-            "wild herbs"
-        ]
-    },
-    {
-        "name": "Phake (Lentil Soup)",
-        "ingredients": [
-            "dried lentils",
-            "chickpeas",
-            "sea salt",
-            "wild herbs",
-            "salted dried fish"
-        ]
-    },
-    {
-        "name": "Kykeon",
-        "ingredients": [
-            "wine",
-            "water",
-            "barley flour",
-            "honey",
-            "brined cheese"
-        ]
-    },
-    {
-        "name": "Trail Mix",
-        "ingredients": [
-            "almonds",
-            "pistachios",
-            "dried raisins",
-            "olive oil",
-            "biscuits"
-        ]
-    }
+  {
+    "name": "Chicken stir-fry",
+    "ingredients": ["chicken", "bell pepper", "rice", "soy sauce"]
+  },
+  {
+    "name": "Egg fried rice",
+    "ingredients": ["eggs", "rice", "bell pepper"]
+  },
+  {
+    "name": "Yogurt parfait",
+    "ingredients": ["yogurt", "granola"]
+  },
+  {
+    "name": "Cheese omelette",
+    "ingredients": ["eggs", "cheese", "butter"]
+  },
+  {
+    "name": "Chicken rice bowl",
+    "ingredients": ["chicken", "rice", "onion"]
+  },
+  {
+    "name": "Garlic pasta",
+    "ingredients": ["pasta", "garlic", "butter"]
+  },
+  {
+    "name": "Tomato toast",
+    "ingredients": ["bread", "tomato", "cheese"]
+  },
+  {
+    "name": "Simple fried egg",
+    "ingredients": ["eggs", "butter"]
+  },
+  {
+    "name": "Biscotti (Cretan Paximadi)",
+    "ingredients": ["biscuits", "water", "wine", "olive oil", "brined cheese", "cured olives"]
+  },
+  {
+    "name": "Energy Paste",
+    "ingredients": ["barley flour", "water", "honey", "dried figs", "pine nuts"]
+  },
+  {
+    "name": "Maza (Porridge)",
+    "ingredients": ["wheat", "water", "olive oil", "wild herbs"]
+  },
+  {
+    "name": "Phake (Lentil Soup)",
+    "ingredients": ["dried lentils", "chickpeas", "sea salt", "wild herbs", "salted dried fish"]
+  },
+  {
+    "name": "Kykeon",
+    "ingredients": ["wine", "water", "barley flour", "honey", "brined cheese"]
+  },
+  {
+    "name": "Trail Mix",
+    "ingredients": ["almonds", "pistachios", "dried raisins", "olive oil", "biscuits"]
+  }
 ]

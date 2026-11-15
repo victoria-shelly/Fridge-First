@@ -10,6 +10,23 @@ Read the full team plan: **[HACKUTA_BUILD_GUIDE.md](./HACKUTA_BUILD_GUIDE.md)**
 
 Shared API / ranking contracts: **[CONTRACTS.md](./CONTRACTS.md)**
 
+## Run locally
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+flask --app app run
+```
+
+Open http://127.0.0.1:5000 · Today defaults to 2026-11-14 · Load Sample Fridge.
+
+```bash
+pip install pytest
+PYTHONPATH=. pytest -q
+python -m unittest test_ranking.py -v
+```
+
 ## Stack
 
 - Flask (Python) + SQLite  
