@@ -16,7 +16,7 @@ Shared API / ranking contracts: **[CONTRACTS.md](./CONTRACTS.md)**
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-flask --app app run
+flask --app app run --port 5000
 ```
 
 Open http://127.0.0.1:5000 · Today defaults to 2026-11-14 · Load Sample Fridge.
