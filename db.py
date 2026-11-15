@@ -1,6 +1,7 @@
 import json
 import sqlite3
 from models import FoodItem, Recipe
+
 def init_db():
     conn = sqlite3.connect('fridge.db')
     conn.row_factory = sqlite3.Row
@@ -38,6 +39,7 @@ conn.execute("""
 """)
 conn.commit()
 conn.close()
+
 def add_item(name, expires, price=0, state="active"):
     name = name.strip() # Normalize the name by stripping whitespace
     conn = sqlite3.connect('fridge.db')
@@ -118,6 +120,7 @@ def add_recipe(name, ingredients, steps):
     )
     conn.commit()
     conn.close()
+    
 def list_recipes():
     conn = sqlite3.connect('fridge.db')
     conn.row_factory = sqlite3.Row

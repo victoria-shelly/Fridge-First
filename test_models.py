@@ -1,6 +1,7 @@
 from models import FoodItem, Recipe
 import pytest
 from datetime import date
+
 def test_food_item_status():
     today = date(2024, 6, 1)
     item1 = FoodItem("Milk", "2024-05-30", 2.5)  # Expired
@@ -12,6 +13,7 @@ def test_food_item_status():
     assert item2.status(today) == "red"
     assert item3.status(today) == "yellow"
     assert item4.status(today) == "green"
+
 def test_food_item_to_dict():
     today = date(2024, 6, 1)
     item = FoodItem("Yogurt", "2024-06-05", 1.5)
@@ -23,10 +25,12 @@ def test_food_item_to_dict():
         "status": "yellow"
     }
     assert item.to_dict(today) == expected_dict
+
 def test_food_item_days_left():
     today = date(2024, 6, 1)
     item = FoodItem("Juice", "2024-06-04", 2.0)
     assert item.days_left(today) == 3
+
 def test_recipe_can_make():
     recipe = Recipe("Pancakes", ["flour", "milk", "eggs"], ["Mix ingredients", "Cook on skillet"])
     pantry_items = {"flour", "milk", "eggs", "sugar"}
@@ -34,6 +38,7 @@ def test_recipe_can_make():
 
     pantry_items_missing = {"flour", "milk"}
     assert recipe.can_make(pantry_items_missing) == False
+    
 def test_recipe_to_dict_and_from_dict():
     recipe = Recipe("Salad", ["lettuce", "tomato", "cucumber"], ["Chop vegetables", "Mix together"])
     recipe_dict = recipe.to_dict()
