@@ -52,7 +52,7 @@
     fridgeList.innerHTML = "";
     if (!items.length) {
       const li = document.createElement("li");
-      li.textContent = "No provisions yet. Load the sample fridge.";
+      li.textContent = "Galley is empty. Load the sample galley to begin the voyage.";
       fridgeList.appendChild(li);
       return;
     }
@@ -73,7 +73,7 @@
       const throwBtn = document.createElement("button");
       throwBtn.className = "danger";
       throwBtn.type = "button";
-      throwBtn.textContent = (item.color || item.status) === "gray" ? "Throw out?" : "Throw out";
+      throwBtn.textContent = (item.color || item.status) === "gray" ? "Pitch spoiled?" : "Pitch spoiled";
       throwBtn.addEventListener("click", async () => {
         await api(`/api/items/${item.id}/throw`, {
           method: "POST",
@@ -131,7 +131,7 @@
 
       const cookBtn = document.createElement("button");
       cookBtn.type = "button";
-      cookBtn.textContent = "Cooked it";
+      cookBtn.textContent = "Served it";
       cookBtn.addEventListener("click", async () => {
         await api("/api/cook", {
           method: "POST",
@@ -149,7 +149,7 @@
     shoppingList.innerHTML = "";
     if (!items.length) {
       const li = document.createElement("li");
-      li.textContent = "Empty — cook a recipe with missing ingredients.";
+      li.textContent = "Empty — serve a meal that needs shore supplies.";
       shoppingList.appendChild(li);
       return;
     }
@@ -175,7 +175,7 @@
       api(`/api/stats?today=${encodeURIComponent(today)}`),
     ]);
     renderFridge(fridge.items || []);
-    renderRecipes(ranked.recipes || ranked || [], "Add food to see ranked recipes.");
+    renderRecipes(ranked.recipes || ranked || [], "Stow provisions to see cookbook rankings from recipes.json.");
     renderShopping(shop.items || []);
     renderStats(impact);
   }
@@ -224,7 +224,7 @@
 
   document.getElementById("this-week-btn").addEventListener("click", async () => {
     const data = await api(`/api/this-week?today=${encodeURIComponent(todayValue())}`);
-    renderRecipes(data.plan || [], "No multi-recipe plan for this fridge.");
+    renderRecipes(data.plan || [], "No multi-recipe plan for this leg of the voyage.");
   });
 
   document.getElementById("recipe-form").addEventListener("submit", async (event) => {

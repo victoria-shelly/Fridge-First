@@ -67,26 +67,26 @@ def init_db():
 
 
 def seed_builtin_recipes():
+    """No-op: cookbook recipes are read live from recipes.json, not copied into SQLite."""
+    return
+
+
+def load_json_recipes() -> list[Recipe]:
+    """Voyage cookbook — always from recipes.json only."""
     if not RECIPES_PATH.exists():
-        return
+        return []
     data = json.loads(RECIPES_PATH.read_text(encoding="utf-8"))
-    with connect() as conn:
-        for row in data:
-            name = row["name"]
-            exists = conn.execute(
-                "SELECT id FROM recipes WHERE name = ? AND source = 'builtin'",
-                (name,),
-            ).fetchone()
-            if exists:
-                continue
-            conn.execute(
-                "INSERT INTO recipes (name, ingredients, steps, source) VALUES (?, ?, ?, 'builtin')",
-                (
-                    name,
-                    json.dumps([normalize_name(x) for x in row.get("ingredients", [])]),
-                    json.dumps(row.get("steps", [])),
-                ),
+    recipes = []
+    for index, row in enumerate(data):
+        recipes.append(
+            Recipe(
+                name=row["name"],
+                ingredients=row.get("ingredients", []),
+                steps=row.get("steps", []),
+                recipe_id=f"json-{index}",
             )
+        )
+    return recipes
 
 
 def load_ingredients():
@@ -189,10 +189,10 @@ def add_recipe(name, ingredients, steps=None):
     return recipe
 
 
-def list_recipes():
+def list_custom_recipes():
     with connect() as conn:
         rows = conn.execute(
-            "SELECT id, name, ingredients, steps FROM recipes ORDER BY name ASC"
+            "SELECT id, name, ingredients, steps FROM recipes WHERE source = 'custom' ORDER BY name ASC"
         ).fetchall()
     recipes = []
     for row in rows:
@@ -205,6 +205,22 @@ def list_recipes():
             )
         )
     return recipes
+
+
+def list_recipes():
+    """Displayed / ranked cookbook comes only from recipes.json."""
+    return load_json_recipes()
+
+
+def find_recipe_by_name(name: str):
+    needle = str(name).strip().lower()
+    for recipe in load_json_recipes():
+        if recipe.name.strip().lower() == needle:
+            return recipe
+    for recipe in list_custom_recipes():
+        if recipe.name.strip().lower() == needle:
+            return recipe
+    return None
 
 
 def get_log():
@@ -229,4 +245,4 @@ def list_shopping():
 
 def get_available_recipes():
     active_names = {item.name for item in list_active_items()}
-    return [recipe for recipe in list_recipes() if recipe.can_make(active_names)]
+    return [recipe for recipe in load_json_recipes() if recipe.can_make(active_names)]

@@ -93,8 +93,13 @@ def validate_recipe(data: dict) -> list[str]:
 def security_headers():
     return {
         "Content-Security-Policy": (
-            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
-            "img-src 'self' data:; object-src 'none'; base-uri 'self'"
+            "default-src 'self'; "
+            "script-src 'self'; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            "font-src 'self' https://fonts.gstatic.com data:; "
+            "img-src 'self' data:; "
+            "object-src 'none'; "
+            "base-uri 'self'"
         ),
         "X-Content-Type-Options": "nosniff",
         "X-Frame-Options": "DENY",

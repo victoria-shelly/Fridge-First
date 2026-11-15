@@ -78,6 +78,11 @@ Prefer `/api/...` paths (plain paths also work).
 | GET | `/api/stats` | | saved / wasted / $ |
 | POST | `/api/sample-fridge` | `{ "today" }` | load ~8 demo items |
 
+## Cookbook source
+
+- Ranked / displayed sample recipes come **only** from `recipes.json`
+- Custom crew notes may be saved in SQLite, but they do not enter `/api/rank` or `/api/recipes`
+
 ## Ingredient name rules
 
 - Store lowercase trimmed names (`"Bell Pepper"` → `"bell pepper"`)  

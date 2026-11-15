@@ -3,83 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fridge First - Provisions For The Journey Home</title>
+  <title>Fridge-First — Provisions for the Journey Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 <body>
+  <div class="sea" aria-hidden="true">
+    <div class="horizon"></div>
+    <div class="sun"></div>
+    <svg class="ship" viewBox="0 0 240 140" role="presentation">
+      <g class="hull">
+        <path d="M28 98 C55 118, 185 118, 214 98 L198 84 L42 84 Z" />
+        <path class="deck" d="M48 84 L190 84 L182 74 L56 74 Z" />
+      </g>
+      <g class="mast">
+        <rect x="116" y="18" width="4" height="66" />
+        <path class="sail sail-main" d="M120 24 L168 70 L120 70 Z" />
+        <path class="sail sail-jib" d="M116 36 L78 72 L116 72 Z" />
+      </g>
+    </svg>
+    <div class="wave wave-a"></div>
+    <div class="wave wave-b"></div>
+    <div class="wave wave-c"></div>
+  </div>
+
   <div class="page">
     <header class="hero">
       <p class="eyebrow">HackUTA 2026 · The Odyssey</p>
-      <h1>Fridge First</h1>
-      <p class="tagline">Watch over the food provisions on the journey home, soldier! Cook what expires first so nothing is wasted.</p>
+      <h1>Fridge-First</h1>
+      <p class="tagline">Steward of the galley on the voyage home — watch the provisions, cook what spoils first, and make port with nothing wasted.</p>
       <div class="date-bar">
-        <label for="today">Today is</label>
+        <label for="today">Voyage day</label>
         <input type="date" id="today" />
-        <button type="button" id="reload" class="ghost">Refresh</button>
+        <button type="button" id="reload" class="ghost">Reset bearings</button>
       </div>
     </header>
 
     <main class="layout">
-      <section class="panel" id="add-panel">
-        <h2>Add Provisions</h2>
+      <section class="panel rise" id="add-panel">
+        <h2>Stow provisions</h2>
+        <p class="hint">Log what was loaded aboard and its use-by date.</p>
         <form id="add-form" class="stack">
           <label>
-            Food
+            Ration
             <input list="ingredient-list" id="item-name" name="name" maxlength="80" required placeholder="chicken" />
             <datalist id="ingredient-list"></datalist>
           </label>
           <label>
-            Expires
+            Use-by
             <input type="date" id="item-expires" name="expires_on" required />
           </label>
           <div class="row">
-            <button type="submit">Add to Fridge</button>
-            <button type="button" id="sample-btn" class="secondary">Load Sample Fridge</button>
+            <button type="submit">Stow in galley</button>
+            <button type="button" id="sample-btn" class="secondary">Load sample galley</button>
           </div>
           <p id="add-error" class="error" hidden></p>
         </form>
       </section>
 
-      <section class="panel" id="fridge-panel">
-        <h2>The Fridge</h2>
-        <p class="hint">Sorted by urgency. Gray items are already expired.</p>
+      <section class="panel rise delay-1" id="fridge-panel">
+        <h2>Galley locker</h2>
+        <p class="hint">Sorted by days left at sea. Gray means already spoiled.</p>
         <ul id="fridge-list" class="item-list"></ul>
       </section>
 
-      <section class="panel wide" id="recipes-panel">
+      <section class="panel wide rise delay-2" id="recipes-panel">
         <div class="row between">
-          <h2>Cook First</h2>
-          <button type="button" id="this-week-btn" class="secondary">This Week</button>
+          <div>
+            <h2>Cook first</h2>
+            <p class="hint">Meals from the voyage cookbook (<code>recipes.json</code>), ranked by urgency.</p>
+          </div>
+          <button type="button" id="this-week-btn" class="secondary">This week’s plan</button>
         </div>
         <div id="recipe-list" class="recipe-grid"></div>
       </section>
 
-      <section class="panel" id="shopping-panel">
-        <h2>Shopping List</h2>
+      <section class="panel rise delay-3" id="shopping-panel">
+        <h2>Shore shopping list</h2>
+        <p class="hint">Missing ingredients for the next port stop.</p>
         <ul id="shopping-list" class="plain-list"></ul>
       </section>
 
-      <section class="panel" id="stats-panel">
-        <h2>Voyage Log</h2>
+      <section class="panel rise delay-3" id="stats-panel">
+        <h2>Voyage log</h2>
         <div class="stats">
           <div><span id="saved-count">0</span><label>Saved</label></div>
-          <div><span id="wasted-count">0</span><label>Wasted</label></div>
-          <div><span id="money-saved">$0</span><label>Savings</label></div>
+          <div><span id="wasted-count">0</span><label>Lost at sea</label></div>
+          <div><span id="money-saved">$0</span><label>Est. saved</label></div>
         </div>
       </section>
 
-      <section class="panel" id="add-recipes-panel">
-        <h2>Add Your Own Recipe</h2>
+      <section class="panel rise delay-4" id="add-recipes-panel">
+        <h2>Crew recipe note</h2>
+        <p class="hint">Custom notes are stored for the crew, but ranked meals stay from <code>recipes.json</code>.</p>
         <form id="recipe-form" class="stack">
           <label>
             Name
-            <input id="recipe-name" maxlength="80" required placeholder="Garlic pasta" />
+            <input id="recipe-name" maxlength="80" required placeholder="Galley stew" />
           </label>
           <label>
             Ingredients (comma-separated)
-            <input id="recipe-ingredients" required placeholder="pasta, garlic, butter" />
+            <input id="recipe-ingredients" required placeholder="onion, rice, olive oil" />
           </label>
-          <button type="submit">Save Recipe</button>
+          <button type="submit">Save note</button>
           <p id="recipe-error" class="error" hidden></p>
         </form>
       </section>

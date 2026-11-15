@@ -41,11 +41,7 @@ def parse_today():
 
 
 def find_recipe(name: str):
-    needle = name.strip().lower()
-    for recipe in db.list_recipes():
-        if recipe.name.strip().lower() == needle:
-            return recipe
-    return None
+    return db.find_recipe_by_name(name)
 
 
 def fresh_fridge_names(today):
@@ -129,7 +125,8 @@ def sample_fridge():
 @app.get("/api/recipes")
 @app.get("/recipes")
 def get_recipes():
-    return jsonify([recipe.to_dict() for recipe in db.list_recipes()])
+    # Sample / voyage cookbook is recipes.json only (not custom DB rows).
+    return jsonify([recipe.to_dict() for recipe in db.load_json_recipes()])
 
 
 @app.post("/api/recipes")
@@ -161,7 +158,9 @@ def get_ranking():
     except ValueError as exc:
         return error(str(exc))
 
-    ranked = rank_recipes_for_api(db.list_recipes(), db.list_active_items(), today=today)
+    ranked = rank_recipes_for_api(
+        db.load_json_recipes(), db.list_active_items(), today=today
+    )
     return jsonify({"today": today.isoformat(), "recipes": ranked})
 
 
@@ -175,7 +174,9 @@ def get_plan():
         return error(str(exc))
 
     count = request.args.get("count", default=5, type=int)
-    plan = plan_week_for_api(db.list_recipes(), db.list_active_items(), today=today, count=count)
+    plan = plan_week_for_api(
+        db.load_json_recipes(), db.list_active_items(), today=today, count=count
+    )
     return jsonify({"today": today.isoformat(), "plan": plan})
 
 

@@ -12,39 +12,47 @@
     "ingredients": ["yogurt", "granola"]
   },
   {
-    "name": "Cheese omelette",
+    "name": "Galley omelette",
     "ingredients": ["eggs", "cheese", "butter"]
   },
   {
-    "name": "Chicken rice bowl",
+    "name": "Homeward chicken bowl",
     "ingredients": ["chicken", "rice", "onion"]
   },
   {
-    "name": "Garlic pasta",
+    "name": "Garlic pasta for the watch",
     "ingredients": ["pasta", "garlic", "butter"]
   },
   {
-    "name": "Tomato toast",
+    "name": "Morning deck toast",
     "ingredients": ["bread", "tomato", "cheese"]
   },
   {
-    "name": "Simple fried egg",
+    "name": "Sunrise fried egg",
     "ingredients": ["eggs", "butter"]
+  },
+  {
+    "name": "Onion soup at sea",
+    "ingredients": ["onion", "butter", "garlic"]
+  },
+  {
+    "name": "Cheese wrap for the oarsmen",
+    "ingredients": ["tortilla", "cheese", "butter"]
   },
   {
     "name": "Biscotti (Cretan Paximadi)",
     "ingredients": ["biscuits", "water", "wine", "olive oil", "brined cheese", "cured olives"]
   },
   {
-    "name": "Energy Paste",
+    "name": "Energy paste for the oars",
     "ingredients": ["barley flour", "water", "honey", "dried figs", "pine nuts"]
   },
   {
-    "name": "Maza (Porridge)",
+    "name": "Maza porridge",
     "ingredients": ["wheat", "water", "olive oil", "wild herbs"]
   },
   {
-    "name": "Phake (Lentil Soup)",
+    "name": "Phake lentil soup",
     "ingredients": ["dried lentils", "chickpeas", "sea salt", "wild herbs", "salted dried fish"]
   },
   {
@@ -52,7 +60,23 @@
     "ingredients": ["wine", "water", "barley flour", "honey", "brined cheese"]
   },
   {
-    "name": "Trail Mix",
+    "name": "Trail mix for the voyage",
     "ingredients": ["almonds", "pistachios", "dried raisins", "olive oil", "biscuits"]
+  },
+  {
+    "name": "Salt-fish with rice",
+    "ingredients": ["salted dried fish", "rice", "olive oil", "onion"]
+  },
+  {
+    "name": "Fig and honey ration",
+    "ingredients": ["dried figs", "honey", "yogurt"]
+  },
+  {
+    "name": "Olive oil flatbread",
+    "ingredients": ["bread", "olive oil", "sea salt"]
+  },
+  {
+    "name": "Herb chicken and rice",
+    "ingredients": ["chicken", "rice", "wild herbs", "olive oil"]
   }
 ]

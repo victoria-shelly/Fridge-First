@@ -78,11 +78,12 @@ def test_throw_out(db_fixture):
 
 
 def test_get_available_recipes(db_fixture):
-    add_item("flour", "2026-11-30", 2.00)
-    add_item("milk", "2026-11-20", 1.50)
+    # Cookbook availability comes from recipes.json only.
     add_item("eggs", "2026-11-25", 3.00)
-    add_recipe("Pancakes", ["flour", "milk", "eggs"], ["Mix", "Cook"])
-    add_recipe("Toast", ["bread"], ["Toast it"])
-    available = get_available_recipes()
-    assert [r.name for r in available] == ["Pancakes"]
-    assert list_recipes()  # seeded builtins + customs exist
+    add_item("butter", "2026-11-28", 2.00)
+    available_names = {r.name for r in get_available_recipes()}
+    assert "Sunrise fried egg" in available_names
+    assert "Chicken stir-fry" not in available_names  # missing chicken/rice/etc.
+    cookbook = list_recipes()
+    assert cookbook
+    assert all(str(r.id).startswith("json-") for r in cookbook)
